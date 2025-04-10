@@ -12,28 +12,31 @@ import {
   Tags,
   Title,
 } from './styles'
-import { CoffeeList } from '../../pages/Home/styles'
 
 type CoffeeCardProps = {
   coffee: {
-    id: string;
-    title: string;
-    description: string;
-    tags: string[];
-    price: number;
-    image: string;
+    id: string
+    title: string
+    description: string
+    tags: string[]
+    price: number
+    image: string
     quantity: number
-  },
+  }
   incrementQuantity: (id: string) => void
   decrementQuantity: (id: string) => void
 }
 
-export function CoffeeCard({ coffee }: CoffeeCardProps) {
-  const theme = useTheme();
+export function CoffeeCard({
+  coffee,
+  incrementQuantity,
+  decrementQuantity,
+}: CoffeeCardProps) {
+  const theme = useTheme()
 
   function handleAddItem() {
     console.log('Adicionar item ao carrinho')
-    return;
+    // Aqui futuramente vai adicionar o café ao carrinho
   }
 
   return (
@@ -41,9 +44,9 @@ export function CoffeeCard({ coffee }: CoffeeCardProps) {
       <CoffeeImg src={coffee.image} alt={coffee.description} />
 
       <Tags>
-        {/* Aqui você pode mapear os tags do café */ }
-        <span key={'Tradicional'}>Tradicional</span>
-        <span key={'Comum'}>Comum</span>
+        {coffee.tags.map((tag) => (
+          <span key={tag}>{tag}</span>
+        ))}
       </Tags>
 
       <Title>{coffee.title}</Title>
@@ -53,14 +56,14 @@ export function CoffeeCard({ coffee }: CoffeeCardProps) {
       <Control>
         <Price>
           <span>R$</span>
-          <span>{coffee.price}</span> {/** Aqui você pode passar o preço do café */}
+          <span>{coffee.price.toFixed(2)}</span>
         </Price>
 
         <Order $itemAdded={false}>
           <QuantityInput
-            quantity={coffee.quantity} // Aqui você pode passar a quantidade do café
-            incrementQuantity={() => {}} // Aqui você pode passar a função de incrementar
-            decrementQuantity={() => {}} // Aqui você pode passar a função de decrementar
+            quantity={coffee.quantity}
+            incrementQuantity={() => incrementQuantity(coffee.id)}
+            decrementQuantity={() => decrementQuantity(coffee.id)}
           />
 
           <button onClick={handleAddItem}>

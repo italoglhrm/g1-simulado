@@ -8,6 +8,8 @@ import { useState, useEffect } from 'react';
 
 import { api } from './../../serves/api';
 
+import { Loading } from '../../components/Loading'
+
 interface Coffee {
   id: string;
   title: string;
@@ -44,19 +46,32 @@ export function Home() {
   }, []);
 
   if (loading) {
-    return <p>Aguarde, carregando...</p>
+    return <Loading />
   }
 
   // Aqui você pode fazer a lógica para incrementar a quantidade do café
   function incrementQuantity(id: string) {
-    // coffees.map(coffee => {
-     
+    setCoffees((prevState) =>
+      prevState.map((coffee) =>
+        coffee.id === id && coffee.quantity < 5
+          ? { ...coffee, quantity: coffee.quantity + 1 }
+          : coffee
+      )
+    );
   }
   
   // Aqui você pode fazer a lógica para decrementar a quantidade do café
   function decrementQuantity(id: string) {
-    //coffees.map(coffee => {
-      
+    function decrementQuantity(id: string) {
+      setCoffees((prevState) =>
+        prevState.map((coffee) =>
+          coffee.id === id && coffee.quantity > 0
+            ? { ...coffee, quantity: coffee.quantity - 1 }
+            : coffee
+        )
+      );
+    }
+    
   }
 
 
@@ -67,10 +82,8 @@ export function Home() {
           <div>
             <Heading>
               <h1>Encontre o café perfeito para qualquer hora do dia</h1>
-
               <span>
-                Com o Coffee Delivery você recebe seu café onde estiver, a
-                qualquer hora
+                Com o Coffee Delivery você recebe seu café onde estiver, a qualquer hora
               </span>
             </Heading>
 
@@ -125,12 +138,13 @@ export function Home() {
 
       <CoffeeList>
         <h2>Nossos cafés</h2>
-
         <div>
-        {coffees.map((coffee) => (
-            <CoffeeCard key={coffee.id} coffee={coffee}
-            incrementQuantity={incrementQuantity}
-            decrementQuantity={decrementQuantity}
+          {coffees.map((coffee) => (
+            <CoffeeCard
+              key={coffee.id}
+              coffee={coffee}
+              incrementQuantity={incrementQuantity}
+              decrementQuantity={decrementQuantity}
             />
           ))}
         </div>
