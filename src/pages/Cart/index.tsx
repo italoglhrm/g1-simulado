@@ -88,38 +88,39 @@ export function Cart() {
 
   
   function handleItemIncrement(itemId: string) {
-    setCoffeesInCart((prevCoffeesInCart) => 
-      prevCoffeesInCart.map((coffee) => {
-        
-        if (itemId === coffee.id) {
-          return { ...coffee, quantity: coffee.quantity + 1, subTotal: (coffee.quantity + 1) * coffee.price }
-        }
+    setCoffeesInCart((prevCoffeesInCart) =>
+    prevCoffeesInCart.map((coffee) => {
+      const isTarget = coffee.id === itemId;
+      const canAdd = coffee.quantity < 5;
+      const updatedQuantity = coffee.quantity + 1;
+      const updatedSubtotal = coffee.price * (coffee.quantity + 1);
 
-        return coffee 
-      })
-    )
+      if (isTarget && canAdd) {
+        return { ...coffee, quantity: updatedQuantity, subTotal: updatedSubtotal}
+      }
+      return coffee;
+    }))
   }
 
   function handleItemDecrement(itemId: string) {
     setCoffeesInCart((prevCoffeesInCart) =>
-      prevCoffeesInCart.map((coffee) => {
-        
-        if (itemId === coffee.id && coffee.quantity > 1) {
-          return { ...coffee, quantity: coffee.quantity - 1, subTotal: (coffee.quantity - 1) * coffee.price }
-        }
+    prevCoffeesInCart.map((coffee) => {
+      const isTarget = coffee.id === itemId;
+      const canRemove = coffee.quantity > 1
+      const updatedQuantity = coffee.quantity - 1;
+      const updatedSubtotal = coffee.price * (coffee.quantity - 1);
 
-        return coffee
-      })
-    )
+      if (isTarget && canRemove) {
+        return  { ...coffee, quantity: updatedQuantity, subTotal: updatedSubtotal };
+      }
+      return coffee;
+    }))
   }
 
-  // usar funcao .filter
   function handleItemRemove(itemId: string) {
     setCoffeesInCart((prevCoffeesInCart) =>
-      prevCoffeesInCart.filter((coffee) =>
-        coffee.id !== itemId
-      )
-    );
+      prevCoffeesInCart.filter((coffee) => 
+        coffee.id != itemId))
   }
   
   return (
@@ -182,7 +183,7 @@ export function Cart() {
                 {new Intl.NumberFormat('pt-br', {
                   currency: 'BRL',
                   style: 'currency',
-                }).format(DELIVERY_PRICE)}
+                }).format(DELIVERY_PRICE*amountTags.length)}
               </span>
             </div>
 
