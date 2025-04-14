@@ -159,7 +159,7 @@ export function Cart() {
                   </div>
                 </div>
 
-                <aside>R$ {coffee.subTotal?.toFixed(2)}</aside>
+                <aside>R$ {coffee.subTotal.toFixed(2)}</aside>
               </Coffee>
 
               <span />
