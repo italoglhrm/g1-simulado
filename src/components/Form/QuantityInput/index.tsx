@@ -26,6 +26,7 @@ export function QuantityInput({
       </button>
       <span>{quantity}</span>
       <button onClick={incrementQuantity}
+      // adiciona propriedade disabled para bloquear quantidade quando chega em 5
       disabled={quantity === 5}
       style={{
         opacity: quantity === 5 ? 0.3 : 1,
