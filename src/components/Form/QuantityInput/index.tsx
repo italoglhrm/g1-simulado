@@ -16,6 +16,7 @@ export function QuantityInput({
     <Container>
       <button 
         onClick={decrementQuantity}
+        // adiciona propriedade disabled para bloquear quantidade quando chega em 0
         disabled={quantity === 1}
         style={{
           opacity: quantity === 1 ? 0 : 1,
