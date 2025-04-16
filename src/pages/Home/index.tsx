@@ -26,10 +26,7 @@ interface Coffee {
 export function Home() {
   const theme = useTheme();
   const [loading, setLoading] = useState(true)
-  const [coffees, setCoffees] = useState<Coffee[]>([]);
-  const [quantity, setQuantity] = useState<number>();
-
-  
+  const [coffees, setCoffees] = useState<Coffee[]>([]);  
 
   useEffect(() => {
     async function getCoffees() {
@@ -62,16 +59,13 @@ export function Home() {
   
   // Aqui você pode fazer a lógica para decrementar a quantidade do café
   function decrementQuantity(id: string) {
-    function decrementQuantity(id: string) {
-      setCoffees((prevState) =>
-        prevState.map((coffee) =>
-          coffee.id === id && coffee.quantity > 0
-            ? { ...coffee, quantity: coffee.quantity - 1 }
-            : coffee
-        )
-      );
-    }
-    
+    setCoffees((prevState) =>
+      prevState.map((coffee) =>
+        coffee.id === id && coffee.quantity > 0
+           ? { ...coffee, quantity: coffee.quantity - 1 }
+          : coffee
+      )
+    );
   }
 
 
