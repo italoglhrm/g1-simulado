@@ -14,7 +14,13 @@ export function QuantityInput({
 }: Props) {
   return (
     <Container>
-      <button onClick={decrementQuantity}>
+      <button 
+        onClick={decrementQuantity}
+        disabled={quantity === 1}
+        style={{
+          opacity: quantity === 1 ? 0 : 1,
+          cursor: quantity === 1 ? "not-allowed" : "pointer",
+        }}>
         <Minus size={14} />
       </button>
       <span>{quantity}</span>

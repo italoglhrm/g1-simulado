@@ -14,6 +14,8 @@ import {
   InfoContainer,
 } from './styles'
 import { Tags } from '../../components/CoffeeCard/styles'
+import { PaymentSelector } from '../../components/PaymentSelector';
+
 
 export interface Item {
   id: string
@@ -33,6 +35,7 @@ interface CoffeeInCart {
   image: string;
   quantity: number;
   subTotal: number;
+  paymentMethod: "credito" | "debito" | "dinheiro" | "pix";
 } 
 
 const DELIVERY_PRICE = 3.75;
@@ -48,6 +51,7 @@ export function Cart() {
       image: "/images/coffees/expresso.png",
       quantity: 1,
       subTotal: 6.90,
+      paymentMethod: "credito"
     },
     {
       id: "1",
@@ -58,6 +62,7 @@ export function Cart() {
       image: "/images/coffees/americano.png",
       quantity: 2,
       subTotal: 19.90,
+      paymentMethod: "credito"
     },
     {
       id: "2",
@@ -68,8 +73,12 @@ export function Cart() {
       image: "/images/coffees/expresso-cremoso.png",
       quantity: 3,
       subTotal: 49.50,
+      paymentMethod: "pix"
     }
   ]);
+  
+  const [paymentMethod, setPaymentMethod] = useState<"credito" | "debito" | "dinheiro" | "pix">("credito");
+  const [orderConfirmed, setOrderConfirmed] = useState(false);
 
   const amountTags: string[] = [];
   
@@ -85,6 +94,32 @@ export function Cart() {
   const totalItemsPrice = coffeesInCart.reduce((currencyValue, coffee) => {
     return currencyValue + coffee.price * coffee.quantity
   }, 0)
+
+  // função para calcular o total + ajuste de acordo com metodo de pagamento
+  function getTotalWithPaymentAdjustment(
+    baseTotal: number,
+    method: "credito" | "debito" | "dinheiro" | "pix"
+  ): number {
+    switch (method) {
+      case "credito":
+        return baseTotal * 1.03; // +3%
+      case "pix":
+        return baseTotal * 0.95; // -5%
+      default:
+        return baseTotal; // débito ou dinheiro = sem alteração
+      }
+    }
+
+    function handleConfirmOrder() {
+      setOrderConfirmed(true);
+    }    
+  
+  
+  // variáveis para processo de pagamento
+  const totalItemsPriceWithPaymentAdjustment = getTotalWithPaymentAdjustment(totalItemsPrice, paymentMethod);
+  const deliveryTotal = DELIVERY_PRICE * amountTags.length;
+  const finalTotal = totalItemsPriceWithPaymentAdjustment + deliveryTotal;
+
 
   
   function handleItemIncrement(itemId: string) {
@@ -173,7 +208,7 @@ export function Cart() {
                 {new Intl.NumberFormat('pt-br', {
                   currency: 'BRL',
                   style: 'currency',
-                }).format(totalItemsPrice)}
+                }).format(totalItemsPriceWithPaymentAdjustment)}
               </span>
             </div>
 
@@ -183,7 +218,7 @@ export function Cart() {
                 {new Intl.NumberFormat('pt-br', {
                   currency: 'BRL',
                   style: 'currency',
-                }).format(DELIVERY_PRICE*amountTags.length)}
+                }).format(deliveryTotal)}
               </span>
             </div>
 
@@ -193,14 +228,36 @@ export function Cart() {
                 {new Intl.NumberFormat('pt-br', {
                   currency: 'BRL',
                   style: 'currency',
-                }).format(totalItemsPrice + (DELIVERY_PRICE * amountTags.length))}
+                }).format(finalTotal)}
               </span>
             </div>
           </CartTotalInfo>
 
-          <CheckoutButton type="submit" form="order">
-            Confirmar pedido
+          {paymentMethod === "credito" && (
+            <p style={{ fontSize: "0.85rem", color: "#888" }}>
+              * Acréscimo de 3% por pagamento no crédito
+            </p>
+          )}
+          {paymentMethod === "pix" && (
+            <p style={{ fontSize: "0.85rem", color: "#888" }}>
+              * Desconto de 5% aplicado por pagamento via Pix
+            </p>
+          )}
+
+
+          <PaymentSelector selected={paymentMethod} onChange={setPaymentMethod} />
+          <CheckoutButton
+            type="button"
+            onClick={handleConfirmOrder}
+            disabled={orderConfirmed}
+            style={{
+              backgroundColor: orderConfirmed ? '#007BFF' : undefined,
+              cursor: orderConfirmed ? 'not-allowed' : 'pointer'
+            }}
+          >
+            {orderConfirmed ? 'Pedido confirmado!' : 'Confirmar pedido'}
           </CheckoutButton>
+
         </CartTotal>
       </InfoContainer>
     </Container>
