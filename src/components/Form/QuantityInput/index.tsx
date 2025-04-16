@@ -19,13 +19,18 @@ export function QuantityInput({
         // adiciona propriedade disabled para bloquear quantidade quando chega em 0
         disabled={quantity === 1}
         style={{
-          opacity: quantity === 1 ? 0 : 1,
+          opacity: quantity === 1 ? 0.3 : 1,
           cursor: quantity === 1 ? "not-allowed" : "pointer",
         }}>
         <Minus size={14} />
       </button>
       <span>{quantity}</span>
-      <button onClick={incrementQuantity}>
+      <button onClick={incrementQuantity}
+      disabled={quantity === 5}
+      style={{
+        opacity: quantity === 5 ? 0.3 : 1,
+        cursor: quantity === 5 ? "not-allowed" : "pointer",
+      }}>
         <Plus size={14} />
       </button>
     </Container>
