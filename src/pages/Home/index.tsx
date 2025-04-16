@@ -31,8 +31,15 @@ export function Home() {
         const request = await api.get('/coffees');
         const delay = new Promise((resolve) => setTimeout(resolve, 900))
         const [response] = await Promise.all([request, delay])
-
-        setCoffees(response.data);
+        
+        // setando os dados e alterando o estado inicial da quantidade para 1
+        setCoffees(
+          response.data.map((coffee: Coffee) => ({
+            ...coffee,
+            quantity: 1
+          }))
+        );
+        
         setLoading(false)
 
       } catch (error) {

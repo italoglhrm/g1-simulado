@@ -54,7 +54,7 @@ export function CoffeeCard({ coffee, incrementQuantity, decrementQuantity }: Cof
       <Control>
         <Price>
           <span>R$</span>
-          <span>{coffee.price}</span> {/** Aqui você pode passar o preço do café */}
+          <span>{(coffee.price*coffee.quantity).toFixed(2)}</span> {/** Aqui você pode passar o preço do café */}
         </Price>
 
         <Order $itemAdded={false}>
