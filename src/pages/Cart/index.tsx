@@ -183,7 +183,7 @@ export function Cart() {
                 {new Intl.NumberFormat('pt-br', {
                   currency: 'BRL',
                   style: 'currency',
-                }).format(DELIVERY_PRICE)}
+                }).format(DELIVERY_PRICE * amountTags.length)}
               </span>
             </div>
 
